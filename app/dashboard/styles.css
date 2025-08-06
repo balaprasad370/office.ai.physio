@@ -1,0 +1,134 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  background-color: #1f2937;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar.open {
+  width: 250px;
+  padding: 20px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar.closed {
+  width: 80px;
+  padding: 1rem;
+  opacity: 0.95;
+  transform: translateX(-5px);
+}
+
+.toggle-btn {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar nav li {
+  margin: 10px 0;
+  transition: transform 0.2s ease;
+}
+
+.sidebar nav li:hover {
+  transform: translateX(5px);
+}
+
+.main-content {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.main-content.with-sidebar {
+  margin-left: 0;
+}
+
+.main-content.full-width {
+  margin-left: 0;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.2s;
+}
+
+
+.react-tel-input .form-control{
+  background-color:transparent !important;
+  width: 100% !important;
+}
+
+.react-tel-input .country-list .country {
+  background-color:#1f2937 !important;
+}
+
+.react-tel-input .country-list .search{
+  background-color:#1f2937 !important;
+}
+
+.react-tel-input .country-list .search-box{
+  background-color:#000;
+}
+
+.react-tel-input .country-list{
+  background-color: #1f2937 !important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag{
+  background-color: #1f2937 !important;
+}
+
+.react-tel-input .flag-dropdown{
+  background-color: #1f2937 !important;
+}
+
+
+/* global.css or inside a <style> tag */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1); /* light transparent thumb */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
