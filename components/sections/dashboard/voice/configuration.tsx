@@ -426,11 +426,7 @@ const Configuration = () => {
       {/* Modal for generate content option  */}
 
       <Dialog open={handleGenerateContentModal} onOpenChange={setHandleGenerateContentModal}  >
-        <DialogTrigger asChild>
-          <Button className="mt-6" variant="stroke">
-            Generate Content
-          </Button>
-        </DialogTrigger>
+     
         <DialogContent className="max-w-[300px] lg:max-w-[800px]">
           <DialogHeader>
             <DialogTitle>Generate Configuration Content</DialogTitle>

@@ -10,21 +10,22 @@ type Props = {
   onClick?: () => void;
   px?: string;
   white?: boolean;
+  type?: "button" | "submit" | "reset";
 };
 
-const Button = ({ className, href = "", children, onClick, px = "px-7", white = false }: Props) => {
+const Button = ({ className, href = "", children, onClick, px = "px-7", white = false, type }: Props) => {
   const buttonClasses = cn(
     `button relative inline-flex items-center justify-center h-11`,
-    `transition-colors hover:text-color-1`,
+    `transition-colors`,
     px,
-    white ? "text-n-8" : "text-n-1",
+    "text-n-1",
     className || ""
   );
 
   const spanClasses = cn("relative z-10");
 
   const renderButton = () => (
-    <button className={buttonClasses} onClick={onClick}>
+    <button className={buttonClasses} onClick={onClick} type={type}>
       <span className={spanClasses}>{children}</span>
       {ButtonSvg(white)}
     </button>
