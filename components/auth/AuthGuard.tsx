@@ -11,7 +11,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await apiClient.get("/accounts/authorize")
+        const response = await apiClient.post("/accounts/authorize")
         if (response.data.status) {
           setIsAuthenticated(true)
         } else {
