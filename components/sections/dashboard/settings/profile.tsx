@@ -181,14 +181,7 @@ function getCroppedImg(
   })
 
   const getData = async () => {
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      toast.error('Missing authentication data.')
-      return
-    }
-
-    try {
+       try {
       const response = await apiClient.get<{ data: UserData }>(
         '/profile/getDetails'
       )
