@@ -2,6 +2,7 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .sidebar {
@@ -10,6 +11,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
+  z-index: 50;
 }
 
 .sidebar.open {
@@ -24,6 +26,66 @@
   padding: 1rem;
   opacity: 0.95;
   transform: translateX(-5px);
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 320px;
+    max-width: 85vw;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 50;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .dashboard-container {
+    padding-left: 0;
+  }
+}
+
+/* Tablet responsive styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar.open {
+    width: 240px;
+  }
+
+  .sidebar.closed {
+    width: 70px;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1025px) {
+  .sidebar.open {
+    width: 280px;
+  }
+
+  .sidebar.closed {
+    width: 80px;
+  }
+}
+
+/* Desktop sidebar visibility */
+@media (min-width: 769px) {
+  .sidebar {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.visible {
+    transform: translateX(0);
+  }
 }
 
 .toggle-btn {
@@ -75,6 +137,100 @@
   transition: scrollbar-color 0.2s;
 }
 
+/* Mobile overlay */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+/* Mobile menu button */
+.mobile-menu-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 30;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+  color: var(--color-1);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Desktop menu button */
+.desktop-menu-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 30;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.desktop-menu-btn:hover {
+  color: var(--color-1);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Touch-friendly mobile styles */
+@media (max-width: 768px) {
+  .sidebar nav .nav-item {
+    padding: 0.75rem 1rem;
+    min-height: 48px;
+  }
+
+  .sidebar .nav-item-content {
+    gap: 0.75rem;
+  }
+
+  .sidebar .nav-item-icon {
+    flex-shrink: 0;
+  }
+
+  .sidebar .nav-item-text {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+.sidebar * {
+  transition: all 0.2s ease;
+}
+
+/* Focus styles for accessibility */
+.sidebar button:focus-visible,
+.sidebar a:focus-visible {
+  outline: 2px solid var(--color-1);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .sidebar {
+    border-right: 2px solid #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar * {
+    transition: none !important;
+  }
+}
 
 .react-tel-input .form-control{
   background-color:transparent !important;
@@ -104,7 +260,6 @@
 .react-tel-input .flag-dropdown{
   background-color: #1f2937 !important;
 }
-
 
 /* global.css or inside a <style> tag */
 ::-webkit-scrollbar {

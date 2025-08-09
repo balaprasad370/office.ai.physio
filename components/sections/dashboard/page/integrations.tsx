@@ -3,6 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { apiClient } from '@/lib/axios'
 
 const Integrations = () => {
   const router = useRouter()

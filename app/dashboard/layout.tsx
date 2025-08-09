@@ -16,11 +16,10 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="flex h-screen overflow-hidden">
-      <div>
-        <Sidebar />
+      <Sidebar />
+      <div className="flex-1 h-screen overflow-y-auto transition-all duration-300 ease-in-out">
+        {children}
       </div>
-
-      <div className="w-full h-screen overflow-y-auto">{children}</div>
     </div>
   )
 }

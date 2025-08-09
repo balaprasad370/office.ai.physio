@@ -2,20 +2,29 @@
 
 import { useLayoutEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import apiClient from '@/lib/axios/apiClient';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = loading
 
   useLayoutEffect(() => {
-    const token = localStorage.getItem('token');
+    const checkAuth = async () => {
+      try {
+        const response = await apiClient.get("/accounts/authorize");
+        if (response.data.status) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          window.location.href = "https://ai.physio";
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        window.location.href = "https://ai.physio";
 
-    if (!token) {
-      router.replace('/login');
-      setIsAuthenticated(false);
-    } else {
-      setIsAuthenticated(true);
+      }
     }
+    checkAuth();
   }, []);
 
   if (isAuthenticated === null) return null; // or <Loading />
