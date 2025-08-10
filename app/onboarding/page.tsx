@@ -101,10 +101,10 @@ export default function Onboarding() {
   }, [apiToLocalKey])
 
   return (
-    <div className="min-h-screen bg-n-8 p-6">
-      <div className="mx-auto w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Left sidebar: steps */}
-        <aside className="md:col-span-4 rounded-xl border border-n-6 bg-n-8 p-6 h-fit sticky top-6">
+    <div className="min-h-screen bg-n-8 p-4 md:p-6">
+      <div className="mx-auto w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+        {/* Left sidebar: steps (desktop) */}
+        <aside className="hidden md:block md:col-span-4 rounded-xl border border-n-6 bg-n-8 p-6 h-fit sticky top-6">
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-n-1">Onboarding</h2>
             <p className="text-xs text-n-4">Step {currentStep + 1} of {ONBOARDING_STEPS.length}</p>
@@ -142,8 +142,38 @@ export default function Onboarding() {
           </ol>
         </aside>
 
+        {/* Mobile stepper */}
+        <div className="md:hidden rounded-xl border border-n-6 bg-n-8 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-base font-semibold text-n-1">Onboarding</h2>
+            <span className="text-xs text-n-4">{currentStep + 1}/{ONBOARDING_STEPS.length}</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {ONBOARDING_STEPS.map((step, index) => {
+              const isActive = index === currentStep
+              const isCompleted = completedKeys.has(step.key) || index < currentStep
+              return (
+                <button
+                  key={step.key}
+                  type="button"
+                  onClick={() => setCurrentStep(index)}
+                  className={`shrink-0 rounded-full border px-3 py-1 text-xs transition-colors ${
+                    isCompleted
+                      ? "border-color-1 bg-color-1 text-n-1"
+                      : isActive
+                      ? "border-color-1 bg-n-7 text-n-1"
+                      : "border-n-6 bg-n-8 text-n-2"
+                  }`}
+                >
+                  {step.title}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         {/* Right content: active step */}
-        <section className="md:col-span-8 rounded-xl border border-n-6 bg-n-8 p-6 md:p-8">
+        <section className="md:col-span-8 rounded-xl border border-n-6 bg-n-8 p-4 md:p-8">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-n-1">{ONBOARDING_STEPS[currentStep].title}</h1>
             {currentStep < ONBOARDING_STEPS.length - 1 && (

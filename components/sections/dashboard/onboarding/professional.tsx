@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -9,6 +9,7 @@ import { Input } from "@/components/atoms/input"
 import { Textarea } from "@/components/atoms/textarea"
 import { Label } from "@/components/atoms/label"
 import { Badge } from "@/components/atoms/badge"
+import apiClient from "@/lib/axios/apiClient"
 
 type StepProps = {
   nextStep: () => void
@@ -77,16 +78,61 @@ export default function ProfessionalStep({ nextStep, prevStep }: StepProps) {
   const [certInput, setCertInput] = useState("")
   const [specInput, setSpecInput] = useState("")
 
+  // Prefill from backend if available
+  useEffect(() => {
+    let mounted = true
+    apiClient
+      .get("/onboarding/about")
+      .then((res) => {
+        if (!mounted) return
+        const data = res?.data?.data
+        console.log("[Onboarding] Professional prefill response", data)
+        if (!data) return
+        const desc: string | undefined = data.description
+        const certsRaw = data.certifications
+        const specsRaw = data.treatment_specialization
+        const parseArray = (raw: unknown): string[] => {
+          try {
+            if (Array.isArray(raw)) return raw as string[]
+            if (typeof raw === "string") return JSON.parse(raw)
+          } catch {}
+          return []
+        }
+        if (desc) setValue("about", desc, { shouldValidate: false })
+        const certs = parseArray(certsRaw)
+        const specs = parseArray(specsRaw)
+        if (certs.length) setValue("certifications", certs, { shouldValidate: true })
+        if (specs.length) setValue("specializations", specs, { shouldValidate: true })
+      })
+      .catch((err) => {
+        // non-blocking
+        console.error("[Onboarding] Professional prefill error", err)
+      })
+    return () => {
+      mounted = false
+    }
+  }, [setValue])
+
+
   // Photo handlers removed
 
   const onSubmit = (values: FormValues) => {
+    try {
     const payload = {
       about: values.about,
       certifications,
       specializations,
     }
-    console.log("[Onboarding] Professional save payload", payload)
-    nextStep()
+
+    // onboarding/about
+    apiClient.post("/onboarding/about", payload).then(res => {
+      console.log("[Onboarding] Professional save response", res.data)
+    })
+      console.log("[Onboarding] Professional save payload", payload)
+      nextStep()
+    } catch (error) {
+      console.error("[Onboarding] Professional save error", error)
+    }
   }
 
   const handleAddToken = (field: "certifications" | "specializations", token: string) => {
