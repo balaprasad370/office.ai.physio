@@ -85,3 +85,34 @@
 .-rotate-360 {
   @apply rotate-[-360deg];
 }
+
+
+
+.react-tel-input .form-control{
+  background-color:transparent !important;
+  width: 100% !important;
+}
+
+.react-tel-input .country-list .country {
+  background-color:#1f2937 !important;
+}
+
+.react-tel-input .country-list .search{
+  background-color:#1f2937 !important;
+}
+
+.react-tel-input .country-list .search-box{
+  background-color:#000;
+}
+
+.react-tel-input .country-list{
+  background-color: #1f2937 !important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag{
+  background-color: #1f2937 !important;
+}
+
+.react-tel-input .flag-dropdown{
+  background-color: #1f2937 !important;
+}

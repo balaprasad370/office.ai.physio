@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,forwardRef, useImperativeHandle } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/tabs'
 import {
   Book,
@@ -12,6 +12,7 @@ import {
   Plus,
   X,
 } from 'lucide-react'
+
 import {
   Select,
   SelectContent,
@@ -32,7 +33,7 @@ interface Language {
   languageName: string
 }
 
-const Configuration = () => {
+const Configuration = forwardRef((props, ref) => {
   const [activeTab, setActiveTab] = useState('tab1')
   const [firstMessageText, setFirstMessageText] = useState('')
   const [firstMessage, setFirstMessage] = useState<Sender>('assistant')
@@ -61,6 +62,13 @@ const Configuration = () => {
     getDataLake()
     getClientData()
   }, [])
+
+
+  useImperativeHandle(ref, () => ({
+    handleSave: () => {
+      handleUpdateAssistant(); // parent can call this
+    }
+  }));
 
   // Combine profile parts into a single, neatly formatted string
   useEffect(() => {
@@ -219,8 +227,9 @@ const Configuration = () => {
   }
 
   const handleUpdateAssistant = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e?.preventDefault()
     try {
+ 
       const postData = {
         identity_purpose: tabContents.tab1,
         conversation_flow: tabContents.tab2,
@@ -263,6 +272,7 @@ const Configuration = () => {
       toast.error('Failed to generate content')
     }
   }
+
 
   return (
     <div className="w-full rounded-xl border border-n-6 bg-n-8 p-6">
@@ -519,6 +529,6 @@ const Configuration = () => {
 
     </div>
   )
-}
+})
 
 export default Configuration
