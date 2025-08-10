@@ -73,25 +73,27 @@ const Notifications = () => {
   if (!visibleNotifications.length) return null
 
   return (
-    <div className="space-y-2 mb-3">
+    <div className="space-y-2 sm:space-y-3 mb-3">
       {visibleNotifications.map((n) => (
         <div
           key={getKey(n)}
-          className={`flex items-start gap-3 rounded-lg border p-3 transition-colors ${typeToContainer[n.type]}`}
+          role="alert"
+          aria-live="polite"
+          className={`flex items-start gap-2 sm:gap-3 rounded-xl border p-3 sm:p-4 transition-colors shadow-sm ${typeToContainer[n.type]}`}
         >
-          <div className={`mt-0.5 ${typeToAccent[n.type]} rounded-md p-1.5 border`}>{typeToIcon[n.type]}</div>
-          <div className="flex-1">
-            <div className="flex items-start justify-between gap-3">
-              <h4 className="text-sm font-semibold text-n-1">{n.title}</h4>
+          <div className={`mt-0.5 ${typeToAccent[n.type]} rounded-md p-1.5 sm:p-2 border`}>{typeToIcon[n.type]}</div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2 sm:gap-3">
+              <h4 className="text-sm sm:text-base font-semibold text-n-1 flex-1 min-w-0 break-words">{n.title}</h4>
               <button
                 aria-label="Dismiss notification"
                 onClick={() => handleDismiss(n)}
-                className="rounded-md border border-n-6 bg-n-7 p-1.5 text-n-3 hover:bg-n-6 hover:text-n-1"
+                className="h-8 w-8 grid place-items-center rounded-md border border-n-6 bg-n-7 text-n-3 hover:bg-n-6 hover:text-n-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-color-1 focus-visible:ring-offset-n-8"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-1 text-sm text-n-3">{n.message}</p>
+            <p className="mt-1 text-xs sm:text-sm text-n-3 whitespace-pre-line break-words">{n.message}</p>
           </div>
         </div>
       ))}
