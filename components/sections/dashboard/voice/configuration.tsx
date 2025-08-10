@@ -40,9 +40,15 @@ const Configuration = () => {
     { languageCode: 'en', priority: 1, languageName: 'English' },
   ])
 
-  const [profileInfo,setProfileInfo] = useState("")
+  const [profileInfo, setProfileInfo] = useState("")
+  const [profileParts, setProfileParts] = useState<{ user: string; lake: string }>({
+    user: "",
+    lake: "",
+  })
+  const [isProfileManuallyEdited, setIsProfileManuallyEdited] = useState(false)
 
   const [handleGenerateContentModal, setHandleGenerateContentModal] = useState(false)
+
 
   const [tabContents, setTabContents] = useState({
     tab1: '',
@@ -53,7 +59,45 @@ const Configuration = () => {
 
   useEffect(() => {
     getDataLake()
+    getClientData()
   }, [])
+
+  // Combine profile parts into a single, neatly formatted string
+  useEffect(() => {
+    if (isProfileManuallyEdited) return
+    const buildProfileInfo = (parts: { user: string; lake: string }) => {
+      const sections: string[] = []
+      if (parts.user) sections.push(parts.user.trim())
+      if (parts.lake) sections.push(parts.lake.trim())
+      return sections.join("\n\n")
+    }
+
+    setProfileInfo(buildProfileInfo(profileParts))
+  }, [profileParts, isProfileManuallyEdited])
+
+
+  const getClientData = async () => {
+    try {
+      const response = await apiClient.get("voice-assistant/get-assistant")
+      console.log("welcome",response.data)
+      if(response.data && response.data.data){
+        const [user] = response.data.data;
+        let userTextData = "";
+        const fullName = user.first_name + " " + user.last_name;
+
+        userTextData += `About Me:\n${fullName} — ${user.designation}${user.company ? ` at ${user.company}` : ""}`
+        if (user.description) {
+          userTextData += `\n\n${String(user.description).trim()}`
+        }
+
+        setProfileParts((prev) => ({ ...prev, user: userTextData.trim() }))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
   const getDataLake = async () => {
     try {
@@ -67,6 +111,23 @@ const Configuration = () => {
           tab3: data.guidelines_scenarios || '',
           tab4: data.knowledge_base || '',
         })
+
+        // Build a clean, deduplicated profile section from data lake
+        const lakeSections: string[] = []
+        if (data.identity_purpose) {
+          lakeSections.push(`Identity & Purpose:\n${String(data.identity_purpose).trim()}`)
+        }
+        if (data.conversation_flow) {
+          lakeSections.push(`Conversation Flow:\n${String(data.conversation_flow).trim()}`)
+        }
+        if (data.guidelines_scenarios) {
+          lakeSections.push(`Guidelines & Scenarios:\n${String(data.guidelines_scenarios).trim()}`)
+        }
+        if (data.knowledge_base) {
+          lakeSections.push(`Knowledge Base:\n${String(data.knowledge_base).trim()}`)
+        }
+
+        setProfileParts((prev) => ({ ...prev, lake: lakeSections.join("\n\n").trim() }))
 
         setFirstMessage(data.is_assistant_first_speaks ? 'assistant' : 'user')
         if (data.assistant_first_text) {
@@ -188,27 +249,17 @@ const Configuration = () => {
 
   const handleGenerateContent = async () => {
     try {
-      const response = await apiClient.post("voice-assistant/generate-content")
+
+      console.log("profileInfo", profileInfo);
+      const response = await apiClient.post("voice-assistant/generate-content", {profileInfo:profileInfo})
       
       if (response.data && response.data.data) {
-        const data = response.data.data
-        setTabContents({
-          tab1: data.identity_purpose || '',
-          tab2: data.conversation_flow || '',
-          tab3: data.guidelines_scenarios || '',
-          tab4: data.knowledge_base || '',
-        })
-        setFirstMessage(data.is_assistant_first_speaks ? 'assistant' : 'user')
-        if (data.assistant_first_text) {
-          setFirstMessageText(data.assistant_first_text)
-        }
-        if (data.languages) {
-          setLanguages(data.languages)
-        }
+        getDataLake()
+        setHandleGenerateContentModal(false)
         toast.success('Content generated successfully')
       }
     } catch (error) {
-      console.log(error)
+      console.log(error?.response?.data || error)
       toast.error('Failed to generate content')
     }
   }
@@ -437,8 +488,9 @@ const Configuration = () => {
           <div className="mt-4">
             <textarea
               value={profileInfo}
-              onChange={(e) =>{
-                setProfileInfo(e.target.value);
+              onChange={(e) => {
+                setIsProfileManuallyEdited(true)
+                setProfileInfo(e.target.value)
               }}
               className="h-[300px] w-full rounded-md border border-n-6 bg-n-7 p-3 font-mono text-sm text-n-1 focus:border-color-1 focus:ring-2 focus:ring-color-1"
               placeholder="Describe your AI assistant's purpose, personality, and key capabilities..."
@@ -448,7 +500,10 @@ const Configuration = () => {
             <Button onClick={()=>{setHandleGenerateContentModal(false)}}>
               Cancel
             </Button>
-            <Button>
+            <Button onClick={() => {
+              console.log("bala")
+              handleGenerateContent()
+            }}>
               <div  className="flex gap-2 ">
 
             <Wand2 className="h-3.5 w-3.5" />

@@ -12,10 +12,13 @@ import Voice from "@/components/sections/dashboard/page/voice"
 import Payments from "@/components/sections/dashboard/page/payments"
 import Domains from "@/components/sections/dashboard/page/domain"
 import Integrations from "@/components/sections/dashboard/page/integrations"
+import Notifications from "@/components/sections/dashboard/page/notifications"
 
 export default function DashboardPage() {
   return (
     <main className="min-h-screen p-2 w-full">
+
+   <Notifications />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full">
         <div className="rounded-lg shadow-md p-2 col-span-1 md:col-span-2 lg:col-span-2 w-full">
           <Bookings />
